@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {  Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-cards',
   templateUrl: './cards.component.html',
@@ -12,6 +13,7 @@ export class CardsComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  
   GotoDescription(id:number){
     this.router.navigate(['detalles',id]);
     

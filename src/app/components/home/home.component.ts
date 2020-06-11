@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
 import { HeroesServiciosService } from "../../services/heroes-servicios.service";
-import { concatMap, map } from "rxjs/operators";
+import { concatMap, map, pluck } from "rxjs/operators";
 import { from } from "rxjs";
+import { Powerstats, RootObject } from "../../interfaces/heroe.interface";
 
 @Component({
   selector: 'app-home',
@@ -10,6 +10,7 @@ import { from } from "rxjs";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
   public indicePaginacion = 1;
   public pageHero: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   
@@ -19,39 +20,38 @@ export class HomeComponent implements OnInit {
 
 
   constructor(
-    private http: HttpClient,
     private HeroService: HeroesServiciosService
   ) {
     this.getSuperHero();
+    
   }
-
+  
   ngOnInit(): void {}
-
+  
   public getSuperHero() {
-    this.ArrayHeroes = [];
-
-    this.loading = true;
-    from(this.pageHero)
-      .pipe(
-        concatMap((id: number) =>
-          this.HeroService.ObtenerHeroe(id).pipe(
-            map((hero: any) => {
-              return {
-                HeroName: hero.name,
-                HeroImage: hero.image.url,
-                HeroId: hero.id,
-              };
-            })
-          )
-        )
-      )
-      .subscribe((heroInformation: any) => {
-        this.loading = false;
-        console.log(heroInformation);
-        this.ArrayHeroes.push(heroInformation);
-        console.log(heroInformation);
-        
-      });
+    
+    from(this.pageHero).pipe(
+      concatMap((id:number) =>  this.HeroService.ObtenerHeroe(id).pipe(
+        map((hero:RootObject)=>{
+          let HeroInfo:RootObject={
+            response: hero.response,
+            id: hero.id,
+            name:hero.name,
+            powerstats:hero.powerstats,
+            biography: hero.biography,
+            appearance: hero.appearance,
+            work: hero.work,
+            connections: hero.connections,
+            image:hero.image
+          }
+          return HeroInfo
+          
+        })
+        ))
+        ).subscribe((hero:RootObject)=>{
+          this.ArrayHeroes.push(hero)
+          console.log(this.ArrayHeroes);
+        })
   }
 
   public paginacionRight() {

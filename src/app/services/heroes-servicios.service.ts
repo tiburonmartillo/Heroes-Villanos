@@ -13,7 +13,6 @@ export class HeroesServiciosService {
 
     console.log(`${this.APIheroes}${id}`);
 
-
     return this.http.get(`${this.APIheroes}${id}`);
   }
 }

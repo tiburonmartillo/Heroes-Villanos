@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalles',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./detalles.component.css']
 })
 export class DetallesComponent implements OnInit {
-
-  constructor() { }
+  @Input() HeroInput: any;
+  constructor(private router:Router) { }
 
   ngOnInit(): void {
   }
+  
 
 }

@@ -1,16 +1,23 @@
-<div class="row col-12 mt-5"  *ngFor=" let hero of ArrayHeroes">
+<div class="fondo">
+  <div class="row row-cols-4 row-cols-md-4">
+ 
+<div *ngFor=" let hero of ArrayHeroes">
 
+  
   <app-cards [HeroInput]="hero"></app-cards>
+</div>
+
 </div>
 
 
 
-<span>
-  <nav>
+  <span class="col-12 justify-center align-items-center">
+
     <ul class="pagination pg-dark">
       <li class="page-item">
         <a class="page-link" aria-label="Previous" (click)="paginacionLeft()">
-          <span aria-hidden="true"> < </span>
+          <span aria-hidden="true">
+            < </span>
         </a>
       </li>
 
@@ -24,5 +31,6 @@
         </a>
       </li>
     </ul>
-  </nav>
-</span>
+
+  </span>
+</div>
