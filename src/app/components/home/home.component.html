@@ -1,0 +1,28 @@
+<div class="row col-12 mt-5"  *ngFor=" let hero of ArrayHeroes">
+
+  <app-cards [HeroInput]="hero"></app-cards>
+</div>
+
+
+
+<span>
+  <nav>
+    <ul class="pagination pg-dark">
+      <li class="page-item">
+        <a class="page-link" aria-label="Previous" (click)="paginacionLeft()">
+          <span aria-hidden="true"> < </span>
+        </a>
+      </li>
+
+      <li class="page-item active">
+        <a class="page-link">{{ indicePaginacion }}</a>
+      </li>
+
+      <li class="page-item">
+        <a class="page-link" aria-label="Next " (click)="paginacionRight()">
+          <span aria-hidden="true">></span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</span>
