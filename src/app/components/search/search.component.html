@@ -1,18 +1,23 @@
-<div class="input-group flex-nowrap col-8 mt-5">
-    <div class="input-group-prepend">
-      <span class="input-group-text bg-primary text-light">Ingresa un nombre</span>
+
+ <div class="fondo image-fluid" style="height: 100%;">
+
+   <h1 class="mx-4 text-center text-white">Buscar Héroe</h1>
+   
+   <div class="mx-3 form-group">
+     <label class="text-white" for="">Ingresa el nombre</label>
+     <input type="text" class="form-control" placeholder="Buscar hero" #inputSearch>
     </div>
-    <input  type="text" class="form-control" placeholder="Nombre" aria-label="Username" aria-describedby="addon-wrapping">
+    <div class="d-flex justify-content-center" *ngIf="loading">
+      <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <div class="row">
+      <ng-container *ngIf="!loading">
+        <div class="col-3" *ngFor="let heroe of HeroInput">
+          <app-cards [HeroInput]='heroe'></app-cards>
+        </div>
+      </ng-container>
+    </div>
+    
   </div>
-
-  <div class="col-12 ">
-
-    <div class="spinner-grow" role="status" *ngIf="loading">
-      <span class="sr-only" *ngIf="!loading" class="fadeIn">Loading...</span>
-    </div>
-
-    <div class="justify-center">
-<app-cards></app-cards>
-    </div>
-                
-</div>

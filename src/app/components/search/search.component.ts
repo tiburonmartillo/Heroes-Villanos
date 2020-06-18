@@ -1,44 +1,71 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import {  HeroesServiciosService } from "../../services/heroes-servicios.service";
-import { fromEvent } from 'rxjs';
-import { debounceTime, pluck, switchMap } from 'rxjs/operators';
+import { Apiservice } from '../../services/api.service';
+import { fromEvent, from } from 'rxjs';
+import { debounceTime, pluck, switchMap, tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Biography } from '../../interfaces/heroe.interface';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+  styleUrls: ['./search.component.css'],
 })
 export class SearchComponent implements OnInit {
-  
-  @ViewChild('inputsearch') inputsearch:ElementRef;
+  @ViewChild('inputSearch') inputSearch: ElementRef;
+  private url = 'https://superheroapi.com/api.php/271791440634137/search/';
+  public HeroInput: Array<any> = [];
+  public loading = false;
 
-  public loading:boolean=true;
-  public heroeRecibido:any;
-  private url=`https://superheroapi.com/api/10213857205424854/`
+  constructor(private http: HttpClient) {}
 
-  constructor(private  http:HttpClient) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-  
-    
-  }
-  searchHereo(nombreheroe){
-    fromEvent(this.inputsearch.nativeElement,'keyup')
-    .pipe(
-      debounceTime(1500),
-      pluck('target','value'),
-      switchMap(nombreheroe => this.http.get(`${this.url}${nombreheroe}`))
-      ).subscribe(value=>{this.heroeRecibido=value;
-    
-  this.loading=false;}
-  
-  )
-    // this.http.get(url).subscribe(pokemonRecibido=>(pokemonRecibido))
-    
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.SearchHero();
   }
 
+  public SearchHero() {
+    fromEvent(this.inputSearch.nativeElement, 'keyup')
+      .pipe(
+        tap(() => {
+          this.loading = true;
+          this.HeroInput = [];
+        }),
+        pluck('target', 'value'),
+        debounceTime(1500),
+        switchMap((nombreHeroe) =>
+          this.http.get(`${this.url}${nombreHeroe}`).pipe(
+            pluck('results'),
+            switchMap((resultArray: Array<any>) =>
+              from(resultArray).pipe(
+                map((hero: any) => {
+                  let HeroInfo: any = {
+                    response: hero.response,
+                    id: hero.id,
+                    name: hero.name,
+                    powerstats: hero.powerstats,
+                    biography: hero.biography,
+                    appearance: hero.appearance,
+                    work: hero.work,
+                    connections: hero.connections,
+                    image: hero.image,
+                  };
+                  return HeroInfo;
+                })
+              )
+            )
+          )
+        )
+      )
+      .subscribe(
+        (hero: any) => {
+          console.log(hero);
+          this.HeroInput.push(hero);
+          this.loading = false;
+        },
+        () => this.SearchHero()
+      );
+  }
 }

@@ -1,12 +1,9 @@
-
-    <div class="col m-2">
-      <div class="card">
-        <img [src]="HeroInput.image.url" class="card-img-top img-fluid" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">{{HeroInput.name}}</h5>
-          <p class="card-text">{{HeroInput.biography.publisher}} {{HeroInput.biography.alignment}} {{HeroInput.connections.relatives}}</p>
-          <a href="" (click)="GotoDescription(HeroInput.id)" color="primary">Ver más...</a >
-        </div>
-      </div>
-    </div>
-    
+<div class="card m-2 h-95">
+  <img [src]="HeroInput.image.url" class="card-img-top img-fluid" alt="...">
+  <div class="card-body">
+    <h3 class="card-title">{{HeroInput.name}}</h3>
+    <h5 class="card-title text-secondary">{{HeroInput.biography['full-name']}}</h5>
+    <p class="card-text text-truncate">{{HeroInput.biography.publisher}} {{HeroInput.biography.alignment}}</p>
+    <a href="" (click)="GotoDescription(HeroInput.id)" color="primary">Ver más...</a>
+  </div>
+</div>

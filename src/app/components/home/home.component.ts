@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HeroesServiciosService } from "../../services/heroes-servicios.service";
-import { concatMap, map, pluck } from "rxjs/operators";
+import { Apiservice } from "../../services/api.service";
+import { concatMap, map, pluck, switchMap } from "rxjs/operators";
 import { from } from "rxjs";
 import { Powerstats, RootObject } from "../../interfaces/heroe.interface";
 
@@ -11,8 +11,8 @@ import { Powerstats, RootObject } from "../../interfaces/heroe.interface";
 })
 export class HomeComponent implements OnInit {
 
-  public indicePaginacion = 1;
-  public pageHero: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  public paginas = 1;
+  public pageHero: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8];
   
   public ArrayHeroes: Array<any> = [];
 
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
 
 
   constructor(
-    private HeroService: HeroesServiciosService
+    private HeroService: Apiservice
   ) {
     this.getSuperHero();
     
@@ -29,7 +29,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {}
   
   public getSuperHero() {
-    
+    this.ArrayHeroes=[];
+    this.loading=false;
     from(this.pageHero).pipe(
       concatMap((id:number) =>  this.HeroService.ObtenerHeroe(id).pipe(
         map((hero:RootObject)=>{
@@ -49,16 +50,20 @@ export class HomeComponent implements OnInit {
         })
         ))
         ).subscribe((hero:RootObject)=>{
-          this.ArrayHeroes.push(hero)
-          console.log(this.ArrayHeroes);
+          this.ArrayHeroes.push(hero);
+          if(this.ArrayHeroes.length==this.pageHero.length){
+            console.log('cargando')
+            this.loading = false;
+          }
         })
+        console.log(this.ArrayHeroes);
   }
 
   public paginacionRight() {
-    this.indicePaginacion++;
+    this.paginas++;
 
     for (let x = 0; x < this.pageHero.length; x++) {
-      this.pageHero[x] += 12;
+      this.pageHero[x] += 8;
     }
     console.log(this.pageHero);
 
@@ -66,13 +71,13 @@ export class HomeComponent implements OnInit {
   }
 
   public paginacionLeft() {
-    if (this.indicePaginacion == 1) return;
+    if (this.paginas == 1) return;
     for (let x = 0; x < this.pageHero.length; x++) {
-      this.pageHero[x] -= 12;
+      this.pageHero[x] -= 8;
     }
     console.log(this.pageHero);
 
-    this.indicePaginacion--;
+    this.paginas--;
     this.getSuperHero();
 
   }
